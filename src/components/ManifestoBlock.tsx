@@ -18,19 +18,19 @@ export const ManifestoBlock: React.FC<ManifestoBlockProps> = ({
   return (
     <section
       id="manifesto"
-      className="bg-[#EFEAE0] text-[#141615] py-16 sm:py-24 border-b border-[#141615]/10"
+      className="w-full max-w-full overflow-x-clip bg-[#EFEAE0] text-[#141615] py-16 sm:py-24 border-b border-[#141615]/10"
     >
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.618fr] gap-6 sm:gap-8 items-stretch">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.618fr] gap-6 sm:gap-8 items-stretch min-w-0">
           {/* Left Side (38.2%): Featured Craft Piece & Material Subtitle */}
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-[28px] bg-[#F7F3EB] border border-[#141615]/10 p-6 sm:p-8 flex flex-col justify-between"
+            className="min-w-0 rounded-[28px] bg-[#F7F3EB] border border-[#141615]/10 p-6 sm:p-8 flex flex-col justify-between"
           >
-            <div className="mb-6">
+            <div className="mb-6 min-w-0">
               <p className="text-xs font-medium text-[#141615]/60 mb-2">
                 Featured Studio Build
               </p>
@@ -42,7 +42,7 @@ export const ManifestoBlock: React.FC<ManifestoBlockProps> = ({
               </p>
             </div>
 
-            <div className="aspect-[1.618/1] lg:aspect-auto lg:flex-1 min-h-[260px] w-full rounded-2xl overflow-hidden bg-[#E5DDD0]">
+            <div className="aspect-[1.618/1] lg:aspect-auto lg:flex-1 min-h-[240px] w-full rounded-2xl overflow-hidden bg-[#E5DDD0]">
               <ResilientImage
                 src={media.craftSpotlightImageUrl}
                 alt={media.craftSpotlightTitle}
@@ -57,19 +57,19 @@ export const ManifestoBlock: React.FC<ManifestoBlockProps> = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-[28px] bg-[#9E3B1C] text-[#F7F3EB] p-7 sm:p-11 flex flex-col justify-between"
+            className="min-w-0 rounded-[28px] bg-[#9E3B1C] text-[#F7F3EB] p-6 sm:p-11 flex flex-col justify-between"
           >
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold tracking-wider text-[#F7F3EB]/80 mb-6">
                 03/ manifesto
               </p>
-              <blockquote className="text-[clamp(1.75rem,3.1vw,2.75rem)] font-bold leading-[1.15] tracking-tight text-balance">
+              <blockquote className="text-[clamp(1.5rem,3.1vw,2.75rem)] font-bold leading-[1.15] tracking-tight text-balance">
                 &ldquo;Good Kenyan furniture shouldn&rsquo;t need replacing every three years. We mill seasoned timber, tailor heavy upholstery by hand, and stand behind every joint across Ruiru, Northern Bypass, Eastern Bypass, and Kahawa Wendani.&rdquo;
               </blockquote>
             </div>
 
-            <div className="mt-10 pt-6 border-t border-[#F7F3EB]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
+            <div className="mt-10 pt-6 border-t border-[#F7F3EB]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 min-w-0">
+              <div className="min-w-0">
                 <p className="text-sm font-semibold text-[#F7F3EB]">
                   Eslis Ruiru Workshop &amp; Showrooms
                 </p>

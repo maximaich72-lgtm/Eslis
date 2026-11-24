@@ -179,7 +179,7 @@ export default function App() {
   const totalBagCount = cart.reduce((sum, entry) => sum + entry.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-[#F7F3EB] text-[#141615]">
+    <div className="min-h-screen w-full max-w-full overflow-x-clip bg-[#F7F3EB] text-[#141615]">
       <Navbar
         activeRoute={route}
         onNavigate={handleNavigate}
@@ -189,7 +189,7 @@ export default function App() {
       />
 
       {route === 'home' ? (
-        <main>
+        <main className="w-full max-w-full overflow-x-clip">
           <HeroSection
             media={media}
             spotlightItems={items}

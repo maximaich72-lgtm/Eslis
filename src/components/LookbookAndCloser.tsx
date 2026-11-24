@@ -36,25 +36,25 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
       {/* 05/ lookbook — rooms, lived in. */}
       <section
         id="lookbook"
-        className="bg-[#F7F3EB] text-[#141615] py-16 sm:py-24 border-b border-[#141615]/10"
+        className="w-full max-w-full overflow-x-clip bg-[#F7F3EB] text-[#141615] py-16 sm:py-24 border-b border-[#141615]/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-            <div>
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14 min-w-0">
+            <div className="min-w-0">
               <p className="text-xs font-semibold tracking-wider text-[#9E3B1C] mb-3">
                 05/ lookbook
               </p>
-              <h2 className="text-[clamp(2.5rem,5vw,4.25rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
+              <h2 className="text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
                 rooms, lived in.
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-[#141615]/70 max-w-md">
+            <p className="text-sm sm:text-base text-[#141615]/70 max-w-md min-w-0">
               Real Nairobi and Kiambu homes photographed after delivery—where timber, light, and daily life settle together.
             </p>
           </div>
 
           {/* 3-Room Photo Showcase */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-16 min-w-0">
             {media.rooms.map((room, index) => (
               <motion.article
                 key={room.id}
@@ -66,14 +66,14 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                   delay: index * 0.08,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="rounded-[24px] bg-[#EFEAE0] border border-[#141615]/10 p-4 sm:p-5 flex flex-col justify-between"
+                className="min-w-0 rounded-[24px] bg-[#EFEAE0] border border-[#141615]/10 p-4 sm:p-5 flex flex-col justify-between"
               >
-                <div>
-                  <div className="flex items-center justify-between text-xs text-[#141615]/60 mb-3">
-                    <span className="font-mono-tabular font-medium text-[#9E3B1C]">
+                <div className="min-w-0">
+                  <div className="flex items-center justify-between gap-2 text-xs text-[#141615]/60 mb-3 min-w-0">
+                    <span className="font-mono-tabular font-medium text-[#9E3B1C] shrink-0">
                       {room.label}
                     </span>
-                    <span>{room.location}</span>
+                    <span className="truncate">{room.location}</span>
                   </div>
                   <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-[#E5DDD0] mb-4">
                     <ResilientImage
@@ -94,11 +94,11 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
           </div>
 
           {/* Customer Reviews */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 min-w-0">
             {CUSTOMER_REVIEWS.map((review) => (
               <div
                 key={review.id}
-                className="rounded-2xl bg-[#EFEAE0]/75 border border-[#141615]/10 p-6 flex flex-col justify-between"
+                className="min-w-0 rounded-2xl bg-[#EFEAE0]/75 border border-[#141615]/10 p-6 flex flex-col justify-between"
               >
                 <p className="text-sm sm:text-base text-[#141615]/85 leading-relaxed mb-5">
                   &ldquo;{review.quote}&rdquo;
@@ -116,11 +116,11 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
       {/* Showrooms Strip */}
       <section
         id="showrooms"
-        className="bg-[#EFEAE0] text-[#141615] py-14 sm:py-16 border-b border-[#141615]/10"
+        className="w-full max-w-full overflow-x-clip bg-[#EFEAE0] text-[#141615] py-14 sm:py-16 border-b border-[#141615]/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 min-w-0">
+            <div className="min-w-0">
               <p className="text-xs font-semibold tracking-wider text-[#9E3B1C] mb-2">
                 Visit in person
               </p>
@@ -130,22 +130,22 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
             </div>
             <a
               href={`tel:+${media.socials.whatsappNumber}`}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B3B2B] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B3B2B] hover:underline shrink-0"
             >
               <Phone className="w-4 h-4" />
               <span className="tabular-nums">{media.socials.whatsappDisplay}</span>
             </a>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-w-0">
             {ESLIS_SHOWROOMS.map((branch) => (
               <div
                 key={branch.id}
-                className="rounded-2xl bg-[#F7F3EB] border border-[#141615]/10 p-5"
+                className="min-w-0 rounded-2xl bg-[#F7F3EB] border border-[#141615]/10 p-5"
               >
-                <div className="flex items-start gap-2.5 mb-2">
+                <div className="flex items-start gap-2.5 mb-2 min-w-0">
                   <MapPin className="w-4 h-4 text-[#9E3B1C] shrink-0 mt-0.5" />
-                  <h3 className="text-sm font-bold text-[#141615]">{branch.name}</h3>
+                  <h3 className="text-sm font-bold text-[#141615] min-w-0">{branch.name}</h3>
                 </div>
                 <p className="text-xs text-[#141615]/75 mb-3">{branch.landmark}</p>
                 <p className="text-[11px] text-[#141615]/55 tabular-nums">{branch.hours}</p>
@@ -156,14 +156,14 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
       </section>
 
       {/* Bring it home. Closer + Footer */}
-      <footer className="bg-[#111211] text-[#F7F3EB] pt-16 sm:pt-24 pb-10">
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-10 pb-12 border-b border-white/10">
-            <div>
+      <footer className="w-full max-w-full overflow-x-clip bg-[#111211] text-[#F7F3EB] pt-16 sm:pt-24 pb-10">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-10 pb-12 border-b border-white/10 min-w-0">
+            <div className="min-w-0">
               <p className="text-xs font-semibold tracking-wider text-[#B84A27] mb-3">
                 06/ commission &amp; delivery
               </p>
-              <h2 className="text-[clamp(2.75rem,6vw,5.25rem)] font-extrabold tracking-tight leading-[0.94] lowercase mb-6 text-balance">
+              <h2 className="text-[clamp(2.25rem,6vw,5.25rem)] font-extrabold tracking-tight leading-[0.94] lowercase mb-6 text-balance">
                 bring it home.
               </h2>
               <p className="text-sm sm:text-base text-[#F7F3EB]/75 max-w-lg mb-8">
@@ -277,8 +277,8 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col justify-end">
-              <div className="rounded-[24px] bg-[#181A19] border border-white/10 p-6 sm:p-7">
+            <div className="flex flex-col justify-end min-w-0">
+              <div className="rounded-[24px] bg-[#181A19] border border-white/10 p-6 sm:p-7 min-w-0">
                 <h3 className="text-base font-bold text-[#F7F3EB] mb-1.5">
                   Request swatches or a custom quote
                 </h3>
@@ -292,7 +292,7 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                     <span>Inquiry received. We will contact you shortly.</span>
                   </div>
                 ) : (
-                  <form onSubmit={handleInquirySubmit} className="flex flex-col sm:flex-row gap-2.5">
+                  <form onSubmit={handleInquirySubmit} className="flex flex-col sm:flex-row gap-2.5 min-w-0">
                     <label htmlFor="eslis-inquiry-input" className="sr-only">
                       Email or phone number
                     </label>
@@ -302,7 +302,7 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                       value={contactInput}
                       onChange={(e) => setContactInput(e.target.value)}
                       placeholder="Email or phone (e.g. 0706...)"
-                      className="flex-1 px-4 py-3 rounded-full bg-[#111211] border border-white/15 text-sm text-[#F7F3EB] placeholder:text-[#F7F3EB]/40 focus:outline-none focus:border-[#9E3B1C]"
+                      className="min-w-0 w-full flex-1 px-4 py-3 rounded-full bg-[#111211] border border-white/15 text-sm text-[#F7F3EB] placeholder:text-[#F7F3EB]/40 focus:outline-none focus:border-[#9E3B1C]"
                       required
                     />
                     <button

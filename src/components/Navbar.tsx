@@ -33,13 +33,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[#F7F3EB]/90 backdrop-blur-md border-b border-[#141615]/8">
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4 sm:gap-8">
+      <header className="sticky top-0 z-40 w-full max-w-full overflow-x-clip bg-[#F7F3EB]/90 backdrop-blur-md border-b border-[#141615]/8">
+        <div className="max-w-[1360px] mx-auto px-3 sm:px-8 h-16 flex items-center justify-between gap-2 sm:gap-6 min-w-0">
           {/* Left: eslis wordmark */}
           <button
             type="button"
             onClick={() => navigateAndClose('home', 'hero')}
-            className="text-2xl font-extrabold tracking-tight text-[#141615] lowercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9E3B1C]"
+            className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#141615] lowercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9E3B1C]"
           >
             eslis
           </button>
@@ -47,12 +47,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Center: Floating dark pill navigation */}
           <nav
             aria-label="Primary navigation"
-            className="flex items-center gap-1 sm:gap-2 px-2 py-1.5 rounded-full bg-[#141615] text-[#F7F3EB] shadow-sm"
+            className="min-w-0 max-w-[calc(100vw-24px)] flex items-center gap-0.5 sm:gap-2 px-1 sm:px-2 py-1 sm:py-1.5 rounded-full bg-[#141615] text-[#F7F3EB] shadow-sm"
           >
             <button
               type="button"
               onClick={() => navigateAndClose('home', 'hero')}
-              className={`px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+              className={`px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                 activeRoute === 'home'
                   ? 'bg-[#F7F3EB] text-[#141615]'
                   : 'text-[#F7F3EB]/80 hover:text-[#F7F3EB]'
@@ -63,21 +63,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={() => navigateAndClose('home', 'collection')}
-              className="px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#F7F3EB]/80 hover:text-[#F7F3EB] whitespace-nowrap shrink-0 transition-colors cursor-pointer"
+              className="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-[#F7F3EB]/80 hover:text-[#F7F3EB] whitespace-nowrap shrink-0 transition-colors cursor-pointer"
             >
               COLLECTION
             </button>
             <button
               type="button"
               onClick={() => navigateAndClose('home', 'manifesto')}
-              className="hidden sm:inline-flex px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#F7F3EB]/80 hover:text-[#F7F3EB] whitespace-nowrap shrink-0 transition-colors cursor-pointer"
+              className="hidden md:inline-flex px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#F7F3EB]/80 hover:text-[#F7F3EB] whitespace-nowrap shrink-0 transition-colors cursor-pointer"
             >
               STUDIO
             </button>
             <button
               type="button"
               onClick={() => navigateAndClose('admin')}
-              className={`px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+              className={`px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                 activeRoute === 'admin'
                   ? 'bg-[#9E3B1C] text-[#F7F3EB]'
                   : 'text-[#F7F3EB]/80 hover:text-[#F7F3EB]'
@@ -88,13 +88,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right: Direct WhatsApp, Menu/Social Drawer & Bag */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`WhatsApp Eslis Furniture on ${socials.whatsappDisplay}`}
-              className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#141615]/15 text-xs font-medium text-[#141615] hover:bg-[#141615]/5 transition-colors whitespace-nowrap shrink-0"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#141615]/15 text-xs font-medium text-[#141615] hover:bg-[#141615]/5 transition-colors whitespace-nowrap shrink-0"
             >
               <MessageCircle className="w-3.5 h-3.5 text-[#1B3B2B]" />
               <span className="tabular-nums">{socials.whatsappDisplay}</span>
@@ -104,17 +104,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={onOpenBag}
               aria-label={`Open shopping bag with ${bagCount} items`}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#1B3B2B] text-[#F7F3EB] text-xs font-semibold hover:bg-[#142D20] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-[#1B3B2B] text-[#F7F3EB] text-[11px] sm:text-xs font-semibold hover:bg-[#142D20] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <ShoppingBag className="w-3.5 h-3.5" />
-              <span className="tabular-nums">Bag ({bagCount})</span>
+              <span className="hidden sm:inline">Bag</span>
+              <span className="tabular-nums">({bagCount})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Open navigation and social channels drawer"
-              className="w-9 h-9 rounded-full border border-[#141615]/15 flex items-center justify-center text-[#141615] hover:bg-[#141615]/5 transition-colors shrink-0 cursor-pointer"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#141615]/15 flex items-center justify-center text-[#141615] hover:bg-[#141615]/5 transition-colors shrink-0 cursor-pointer"
             >
               <Menu className="w-4 h-4" />
             </button>

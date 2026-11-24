@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowRight,
@@ -29,6 +29,16 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
   whatsappNumber = WHATSAPP_NUMBER,
 }) => {
   const shouldReduceMotion = useReducedMotion();
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    setIsDesktop(mq.matches);
+    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', listener);
+    return () => mq.removeEventListener('change', listener);
+  }, []);
+
   const spotlightList = items.slice(0, 4);
   const extraItems = items.slice(4);
   const activeItem =
@@ -56,22 +66,22 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
   return (
     <section
       id="collection"
-      className="bg-[#111211] text-[#F7F3EB] py-16 sm:py-24 border-b border-white/10"
+      className="w-full max-w-full overflow-x-clip bg-[#111211] text-[#F7F3EB] py-16 sm:py-24 border-b border-white/10"
     >
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
         {/* Header Row */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-          <div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14 min-w-0">
+          <div className="min-w-0">
             <p className="text-xs font-medium tracking-wider text-[#B84A27] mb-3">
               02/ fresh collection
             </p>
-            <h2 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
+            <h2 className="text-[clamp(2.25rem,5.5vw,4.5rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
               new collection
             </h2>
           </div>
-          <div className="flex items-center justify-between md:justify-end gap-4">
-            <p className="text-sm sm:text-base text-[#F7F3EB]/70 max-w-xs">
-              Four pieces. Drag or click to switch them.
+          <div className="flex items-center justify-between md:justify-end gap-4 min-w-0">
+            <p className="text-sm sm:text-base text-[#F7F3EB]/70 max-w-xs min-w-0">
+              Four pieces. {isDesktop ? 'Drag or click to switch them.' : 'Tap a card or arrow to switch them.'}
             </p>
             <div className="flex items-center gap-2 shrink-0">
               <button
@@ -95,26 +105,40 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
         </div>
 
         {/* Main Stage: Golden-root Spotlight Left + 4 Numbered Vertical Cards Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.272fr_1fr] gap-8 lg:gap-10 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.272fr_1fr] gap-8 lg:gap-10 items-stretch min-w-0">
           {/* Left: Active Spotlight */}
-          <div className="flex flex-col justify-between rounded-[28px] bg-[#181A19] border border-white/10 p-5 sm:p-7 overflow-hidden">
+          <div className="min-w-0 flex flex-col justify-between rounded-[28px] bg-[#181A19] border border-white/10 p-5 sm:p-7 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeItem.id}
-                drag={shouldReduceMotion ? false : 'x'}
+                drag={shouldReduceMotion || !isDesktop ? false : 'x'}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.18}
                 onDragEnd={(_, info) => {
                   if (info.offset.x < -45) cyclePiece(1);
                   else if (info.offset.x > 45) cyclePiece(-1);
                 }}
-                initial={shouldReduceMotion ? false : { opacity: 0, x: 18 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={shouldReduceMotion ? undefined : { opacity: 0, x: -18 }}
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : isDesktop
+                    ? { opacity: 0, x: 18 }
+                    : { opacity: 0, y: 10 }
+                }
+                animate={isDesktop ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 }}
+                exit={
+                  shouldReduceMotion
+                    ? undefined
+                    : isDesktop
+                    ? { opacity: 0, x: -18 }
+                    : { opacity: 0, y: -10 }
+                }
                 transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col h-full justify-between cursor-grab active:cursor-grabbing"
+                className={`min-w-0 flex flex-col h-full justify-between ${
+                  isDesktop ? 'cursor-grab active:cursor-grabbing' : ''
+                }`}
               >
-                <div>
+                <div className="min-w-0">
                   <div className="aspect-[1.618/1] w-full rounded-2xl overflow-hidden bg-[#222523] mb-6 relative">
                     <ResilientImage
                       src={activeItem.imageUrl}
@@ -127,16 +151,16 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-baseline justify-between gap-4 mb-3">
-                    <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F3EB]">
+                  <div className="flex flex-wrap items-baseline justify-between gap-3 sm:gap-4 mb-3 min-w-0">
+                    <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F3EB] min-w-0">
                       {activeItem.title}
                     </h3>
-                    <span className="text-xl sm:text-2xl font-bold text-[#F7F3EB] tabular-nums">
+                    <span className="text-xl sm:text-2xl font-bold text-[#F7F3EB] tabular-nums shrink-0">
                       {formatKes(activeItem.priceKes)}
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#F7F3EB]/65 mb-4">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#F7F3EB]/65 mb-4 min-w-0">
                     <span>{activeItem.dimensions}</span>
                     <span aria-hidden="true">·</span>
                     <span>{activeItem.material}</span>
@@ -149,12 +173,12 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/10">
-                  <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/10 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 min-w-0">
                     <button
                       type="button"
                       onClick={() => onAddToBag(activeItem)}
-                      className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#F7F3EB] text-[#141615] text-xs sm:text-sm font-semibold hover:bg-[#EFEAE0] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-[#F7F3EB] text-[#141615] text-xs sm:text-sm font-semibold hover:bg-[#EFEAE0] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Add to bag</span>
@@ -164,7 +188,7 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
                       href={whatsappHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#9E3B1C] text-[#F7F3EB] text-xs sm:text-sm font-semibold hover:bg-[#B84A27] transition-colors whitespace-nowrap shrink-0"
+                      className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-full bg-[#9E3B1C] text-[#F7F3EB] text-xs sm:text-sm font-semibold hover:bg-[#B84A27] transition-colors whitespace-nowrap shrink-0"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Order via WhatsApp</span>
@@ -199,7 +223,7 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
           </div>
 
           {/* Right: 4 Numbered Vertical Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
             {spotlightList.map((item) => {
               const isSelected = item.id === activeItem.id;
               return (
@@ -208,7 +232,7 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
                   type="button"
                   onClick={() => onSelectId(item.id)}
                   aria-pressed={isSelected}
-                  className={`relative group text-left rounded-[24px] p-4 flex flex-col justify-between transition-colors duration-200 border cursor-pointer ${
+                  className={`relative min-w-0 group text-left rounded-[24px] p-4 flex flex-col justify-between transition-colors duration-200 border cursor-pointer ${
                     isSelected
                       ? 'bg-[#1B3B2B] border-[#F7F3EB]/45 shadow-lg'
                       : 'bg-[#181A19] border-white/10 hover:border-white/25 hover:bg-[#1E201F]'

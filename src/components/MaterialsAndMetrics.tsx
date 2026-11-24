@@ -59,9 +59,9 @@ const AnimatedMetric: React.FC<CounterMetricProps> = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="py-2"
+      className="py-2 min-w-0"
     >
-      <div className="text-[clamp(2.5rem,4.5vw,3.75rem)] font-extrabold tracking-tight text-[#F7F3EB] tabular-nums leading-none mb-2">
+      <div className="text-[clamp(2rem,4.5vw,3.75rem)] font-extrabold tracking-tight text-[#F7F3EB] tabular-nums leading-none mb-2">
         {displayValue.toLocaleString('en-KE')}
         {suffix}
       </div>
@@ -84,24 +84,24 @@ export const MaterialsAndMetrics: React.FC = () => {
   const outerCardY = useTransform(scrollYProgress, [0, 1], [-10, 10]);
 
   return (
-    <section id="materials" ref={sectionRef} className="bg-[#F7F3EB] text-[#141615]">
+    <section id="materials" ref={sectionRef} className="w-full max-w-full overflow-x-clip bg-[#F7F3EB] text-[#141615]">
       {/* 04/ materials */}
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-8 py-16 sm:py-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
-          <div>
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-8 py-16 sm:py-24 w-full min-w-0">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14 min-w-0">
+          <div className="min-w-0">
             <p className="text-xs font-semibold tracking-wider text-[#9E3B1C] mb-3">
               04/ materials
             </p>
-            <h2 className="text-[clamp(2.5rem,5vw,4.25rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
+            <h2 className="text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold tracking-tight leading-[0.95] lowercase text-balance">
               what it&rsquo;s made of
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-[#141615]/70 max-w-md">
+          <p className="text-sm sm:text-base text-[#141615]/70 max-w-md min-w-0">
             Every frame begins with moisture-checked timber, heavy-rub upholstery, and hand-rubbed natural finishes.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 min-w-0">
           {MATERIAL_CARDS.map((card, idx) => {
             const yStyle = shouldReduceMotion
               ? undefined
@@ -113,9 +113,9 @@ export const MaterialsAndMetrics: React.FC = () => {
               <motion.article
                 key={card.id}
                 style={yStyle}
-                className="rounded-[24px] bg-[#EFEAE0] border border-[#141615]/10 p-5 flex flex-col justify-between"
+                className="min-w-0 rounded-[24px] bg-[#EFEAE0] border border-[#141615]/10 p-5 flex flex-col justify-between"
               >
-                <div>
+                <div className="min-w-0">
                   <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-[#E5DDD0] mb-5">
                     <ResilientImage
                       src={card.imageUrl}
@@ -140,8 +140,8 @@ export const MaterialsAndMetrics: React.FC = () => {
       </div>
 
       {/* Dark Metrics Strip */}
-      <div className="bg-[#111211] text-[#F7F3EB] py-14 sm:py-16 border-y border-white/10">
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+      <div className="w-full max-w-full overflow-x-clip bg-[#111211] text-[#F7F3EB] py-14 sm:py-16 border-y border-white/10">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10 w-full min-w-0">
           <AnimatedMetric
             target={5000}
             suffix="+"

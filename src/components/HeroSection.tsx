@@ -37,14 +37,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [activeSwatch, setActiveSwatch] = useState(FINISH_SWATCHES[0]);
   const [ambientMotion, setAmbientMotion] = useState(true);
   const [isFinePointer, setIsFinePointer] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
 
   useEffect(() => {
-    const mq = window.matchMedia('(pointer: fine)');
-    setIsFinePointer(mq.matches);
-    const listener = (e: MediaQueryListEvent) => setIsFinePointer(e.matches);
-    mq.addEventListener('change', listener);
-    return () => mq.removeEventListener('change', listener);
+    const pointerMq = window.matchMedia('(pointer: fine)');
+    const desktopMq = window.matchMedia('(min-width: 768px)');
+    setIsFinePointer(pointerMq.matches);
+    setIsDesktop(desktopMq.matches);
+    const onPointerChange = (e: MediaQueryListEvent) => setIsFinePointer(e.matches);
+    const onDesktopChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    pointerMq.addEventListener('change', onPointerChange);
+    desktopMq.addEventListener('change', onDesktopChange);
+    return () => {
+      pointerMq.removeEventListener('change', onPointerChange);
+      desktopMq.removeEventListener('change', onDesktopChange);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -58,7 +66,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     mass: 0.4,
   });
 
-  // Scroll-linked choreography: sofa rotates/tilts and shifts in depth while side pieces react
+  // Scroll-linked choreography: desktop uses 3D tilt + lateral shift; mobile (<768px) stays strictly in-place (y + scale)
   const sofaRotateZ = useTransform(smoothProgress, [0, 1], [0, -4.5]);
   const sofaRotateY = useTransform(smoothProgress, [0, 1], [0, 8]);
   const sofaY = useTransform(smoothProgress, [0, 1], [0, 48]);
@@ -74,7 +82,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const rightSidePiece = spotlightItems[3] || spotlightItems[2];
 
   const handleStageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isFinePointer || shouldReduceMotion) return;
+    if (!isFinePointer || !isDesktop || shouldReduceMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
@@ -90,13 +98,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section
       id="hero"
       ref={heroRef}
-      className="relative overflow-x-clip bg-[#F7F3EB] text-[#141615] pt-6 sm:pt-10 pb-10 sm:pb-14 border-b border-[#141615]/10"
+      className="relative w-full max-w-full overflow-x-clip bg-[#F7F3EB] text-[#141615] pt-6 sm:pt-10 pb-10 sm:pb-14 border-b border-[#141615]/10"
     >
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-8 w-full min-w-0">
         {/* Top subtle atelier line */}
-        <div className="flex items-center justify-between text-xs text-[#141615]/65 mb-4 sm:mb-6">
-          <span>01 / Nairobi &amp; Ruiru Craft Atelier</span>
-          <span className="hidden sm:inline">Four Showrooms · Custom Built in 14 Days</span>
+        <div className="flex items-center justify-between gap-2 text-xs text-[#141615]/65 mb-4 sm:mb-6 min-w-0">
+          <span className="truncate">01 / Nairobi &amp; Ruiru Craft Atelier</span>
+          <span className="hidden sm:inline shrink-0">Four Showrooms · Custom Built in 14 Days</span>
         </div>
 
         {/* #hero-container: Full eslis wordmark at higher z-index above seamless sofa centerpiece */}
@@ -104,23 +112,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           id="hero-container"
           onMouseMove={handleStageMouseMove}
           onMouseLeave={resetTilt}
-          className="relative overflow-visible flex flex-col items-center justify-start pt-2 sm:pt-4 pb-4 perspective-[1200px]"
+          className="relative w-full max-w-full overflow-x-clip overflow-y-visible flex flex-col items-center justify-start pt-2 sm:pt-4 pb-4 md:perspective-[1200px]"
         >
-          {/* Giant display wordmark — z-30 (above sofa z-10), zero clipping */}
+          {/* Giant display wordmark — z-30 (above sofa z-10), fits cleanly inside mobile padding */}
           <motion.div
             style={shouldReduceMotion ? undefined : { y: wordmarkY }}
             initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-none select-none relative z-30 w-full flex justify-center overflow-visible pb-2"
+            className="pointer-events-none select-none relative z-30 w-full max-w-full flex justify-center overflow-x-clip overflow-y-visible pb-2"
           >
-            <h1 className="text-[clamp(5.75rem,21vw,17.5rem)] font-extrabold leading-none tracking-[-0.06em] text-[#141615] lowercase">
+            <h1 className="text-[clamp(4.5rem,20vw,17.5rem)] font-extrabold leading-none tracking-[-0.06em] text-[#141615] lowercase max-w-full text-center">
               eslis
             </h1>
           </motion.div>
 
-          {/* Left flanking accent piece */}
-          {leftSidePiece && (
+          {/* Left flanking accent piece (desktop only) */}
+          {isDesktop && leftSidePiece && (
             <motion.button
               type="button"
               onClick={() => onSelectPiece(leftSidePiece.id)}
@@ -146,8 +154,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </motion.button>
           )}
 
-          {/* Right flanking accent piece */}
-          {rightSidePiece && (
+          {/* Right flanking accent piece (desktop only) */}
+          {isDesktop && rightSidePiece && (
             <motion.button
               type="button"
               onClick={() => onSelectPiece(rightSidePiece.id)}
@@ -178,9 +186,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             style={
               shouldReduceMotion
                 ? undefined
-                : {
+                : isDesktop
+                ? {
                     rotateZ: sofaRotateZ,
                     rotateY: sofaRotateY,
+                    y: sofaY,
+                    scale: sofaScale,
+                  }
+                : {
                     y: sofaY,
                     scale: sofaScale,
                   }
@@ -188,37 +201,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             initial={
               shouldReduceMotion
                 ? false
-                : { opacity: 0, scale: 0.95, y: 18, rotateZ: 1 }
+                : isDesktop
+                ? { opacity: 0, scale: 0.95, y: 18, rotateZ: 1 }
+                : { opacity: 0, scale: 0.97, y: 12 }
             }
             animate={
               shouldReduceMotion
                 ? { opacity: 1 }
                 : ambientMotion
-                ? {
-                    opacity: 1,
-                    scale: 1,
-                    y: [0, -6, 0],
-                    rotateZ: [0, 0.55, 0],
-                  }
+                ? isDesktop
+                  ? {
+                      opacity: 1,
+                      scale: 1,
+                      y: [0, -6, 0],
+                      rotateZ: [0, 0.55, 0],
+                    }
+                  : {
+                      opacity: 1,
+                      scale: 1,
+                      y: [0, -5, 0],
+                    }
                 : { opacity: 1, scale: 1, y: 0, rotateZ: 0 }
             }
             transition={
               ambientMotion && !shouldReduceMotion
-                ? {
-                    opacity: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
-                    scale: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-                    y: { duration: 5.5, repeat: Infinity, ease: 'easeInOut' },
-                    rotateZ: { duration: 6.5, repeat: Infinity, ease: 'easeInOut' },
-                  }
+                ? isDesktop
+                  ? {
+                      opacity: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                      scale: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                      y: { duration: 5.5, repeat: Infinity, ease: 'easeInOut' },
+                      rotateZ: { duration: 6.5, repeat: Infinity, ease: 'easeInOut' },
+                    }
+                  : {
+                      opacity: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                      scale: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                      y: { duration: 5.5, repeat: Infinity, ease: 'easeInOut' },
+                    }
                 : { duration: 0.75, ease: [0.16, 1, 0.3, 1] }
             }
-            className="relative z-10 w-full max-w-[740px] mt-4 sm:mt-6 lg:mt-8 overflow-visible"
+            className="relative z-10 w-full max-w-[740px] mt-4 sm:mt-6 lg:mt-8 overflow-x-clip overflow-y-visible"
           >
             <div
-              className="hover-tilt-fine-only relative transition-transform duration-300 ease-out overflow-visible"
+              className="hover-tilt-fine-only relative transition-transform duration-300 ease-out overflow-x-clip overflow-y-visible"
               style={{
                 transform:
-                  isFinePointer && !shouldReduceMotion
+                  isFinePointer && isDesktop && !shouldReduceMotion
                     ? `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`
                     : undefined,
               }}
@@ -241,9 +268,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Bottom Hero Action & Metadata Bar */}
-        <div className="mt-8 sm:mt-10 pt-6 border-t border-[#141615]/12 grid grid-cols-1 md:grid-cols-3 items-center gap-6">
+        <div className="mt-8 sm:mt-10 pt-6 border-t border-[#141615]/12 grid grid-cols-1 md:grid-cols-3 items-center gap-6 min-w-0">
           {/* Left: Primary CTA + Watch the film / motion toggle */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={onShopCollection}
@@ -277,7 +304,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Center: Tagline */}
-          <div className="text-left md:text-center">
+          <div className="text-left md:text-center min-w-0">
             <p className="text-sm sm:text-base font-semibold tracking-tight text-[#141615]">
               {media.heroTagline}
             </p>
@@ -285,7 +312,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Right: Swatch selector + +5,000 handcrafted stat */}
-          <div className="flex items-center md:justify-end gap-4">
+          <div className="flex items-center md:justify-end gap-4 min-w-0">
             <div className="flex items-center gap-2" role="group" aria-label="Upholstery finishes">
               {FINISH_SWATCHES.map((swatch) => {
                 const isSelected = swatch.id === activeSwatch.id;
