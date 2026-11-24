@@ -1,0 +1,6 @@
+{
+  "name": "Eslis Furniture",
+  "description": "Handcrafted Kenyan furniture & bespoke interiors across Ruiru, Northern Bypass, Eastern Bypass, and Kahawa Wendani.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
