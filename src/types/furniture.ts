@@ -25,6 +25,19 @@ export interface RoomLookbook {
   imageUrl: string;
 }
 
+export interface SocialLinksConfig {
+  instagramHandle: string;
+  instagramUrl: string;
+  facebookBrandHandle: string;
+  facebookBrandUrl: string;
+  facebookFounderHandle: string;
+  facebookFounderUrl: string;
+  xHandle: string;
+  xUrl: string;
+  whatsappDisplay: string;
+  whatsappNumber: string;
+}
+
 export interface SiteMediaConfig {
   heroImageUrl: string;
   heroTagline: string;
@@ -33,6 +46,7 @@ export interface SiteMediaConfig {
   craftSpotlightMaterial: string;
   craftSpotlightImageUrl: string;
   rooms: RoomLookbook[];
+  socials: SocialLinksConfig;
 }
 
 export interface SaleRecord {

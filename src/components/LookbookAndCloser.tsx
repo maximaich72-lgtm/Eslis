@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CheckCircle2, MapPin, MessageCircle, Phone } from 'lucide-react';
 import {
   CUSTOMER_REVIEWS,
-  DISPLAY_PHONE,
   ESLIS_SHOWROOMS,
-  WHATSAPP_NUMBER,
 } from '../data/defaultCatalog';
 import { SiteMediaConfig } from '../types/furniture';
 import { ResilientImage } from './ResilientImage';
+import { FacebookGlyph, InstagramGlyph, XGlyph } from './SocialIcons';
 
 interface LookbookAndCloserProps {
   media: SiteMediaConfig;
@@ -130,11 +129,11 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
               </h2>
             </div>
             <a
-              href={`tel:+254706276318`}
+              href={`tel:+${media.socials.whatsappNumber}`}
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B3B2B] hover:underline"
             >
               <Phone className="w-4 h-4" />
-              <span className="tabular-nums">{DISPLAY_PHONE}</span>
+              <span className="tabular-nums">{media.socials.whatsappDisplay}</span>
             </a>
           </div>
 
@@ -159,7 +158,7 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
       {/* Bring it home. Closer + Footer */}
       <footer className="bg-[#111211] text-[#F7F3EB] pt-16 sm:pt-24 pb-10">
         <div className="max-w-[1360px] mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-10 pb-14 border-b border-white/10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-10 pb-12 border-b border-white/10">
             <div>
               <p className="text-xs font-semibold tracking-wider text-[#B84A27] mb-3">
                 06/ commission &amp; delivery
@@ -171,7 +170,7 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                 Visit any Eslis Furniture showroom or message our workshop directly for custom fabric swatches, exact room sizing, and Nairobi-wide delivery.
               </p>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 mb-10">
                 <button
                   type="button"
                   onClick={onShopCollection}
@@ -181,7 +180,7 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <a
-                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                  href={`https://wa.me/${media.socials.whatsappNumber}?text=${encodeURIComponent(
                     'Hello Eslis Furniture, I would like to inquire about custom furniture.'
                   )}`}
                   target="_blank"
@@ -189,8 +188,92 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#1B3B2B] text-[#F7F3EB] text-sm font-semibold hover:bg-[#234C38] transition-colors"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span className="tabular-nums">WhatsApp {DISPLAY_PHONE}</span>
+                  <span className="tabular-nums">WhatsApp {media.socials.whatsappDisplay}</span>
                 </a>
+              </div>
+
+              {/* Social Media Channels Grid */}
+              <div>
+                <p className="text-xs font-semibold tracking-wider text-[#F7F3EB]/55 mb-3">
+                  Follow &amp; Connect with Eslis
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a
+                    href={media.socials.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between rounded-2xl bg-[#181A19] border border-white/10 px-4 py-3 hover:border-[#9E3B1C] transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <InstagramGlyph className="w-4 h-4 text-[#B84A27] shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[#F7F3EB]">Instagram</div>
+                        <div className="text-xs text-[#F7F3EB]/65 truncate">
+                          {media.socials.instagramHandle}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-[#F7F3EB]/45 group-hover:text-[#F7F3EB] shrink-0" />
+                  </a>
+
+                  <a
+                    href={media.socials.facebookBrandUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between rounded-2xl bg-[#181A19] border border-white/10 px-4 py-3 hover:border-[#9E3B1C] transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <FacebookGlyph className="w-4 h-4 text-[#B84A27] shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[#F7F3EB]">
+                          Facebook (Brand)
+                        </div>
+                        <div className="text-xs text-[#F7F3EB]/65 truncate">
+                          {media.socials.facebookBrandHandle}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-[#F7F3EB]/45 group-hover:text-[#F7F3EB] shrink-0" />
+                  </a>
+
+                  <a
+                    href={media.socials.facebookFounderUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between rounded-2xl bg-[#181A19] border border-white/10 px-4 py-3 hover:border-[#9E3B1C] transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <FacebookGlyph className="w-4 h-4 text-[#F7F3EB]/80 shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[#F7F3EB]">
+                          Facebook (Owner / Founder)
+                        </div>
+                        <div className="text-xs text-[#F7F3EB]/65 truncate">
+                          {media.socials.facebookFounderHandle}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-[#F7F3EB]/45 group-hover:text-[#F7F3EB] shrink-0" />
+                  </a>
+
+                  <a
+                    href={media.socials.xUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between rounded-2xl bg-[#181A19] border border-white/10 px-4 py-3 hover:border-[#9E3B1C] transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <XGlyph className="w-3.5 h-3.5 text-[#F7F3EB]/85 shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[#F7F3EB]">X</div>
+                        <div className="text-xs text-[#F7F3EB]/65 truncate">
+                          {media.socials.xHandle}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-[#F7F3EB]/45 group-hover:text-[#F7F3EB] shrink-0" />
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -241,8 +324,40 @@ export const LookbookAndCloser: React.FC<LookbookAndCloserProps> = ({
               <span>·</span>
               <span>Eslis Furniture Kenya</span>
             </div>
-            <div className="flex items-center gap-5">
-              <span>© {new Date().getFullYear()} Eslis Furniture</span>
+            <div className="flex flex-wrap items-center justify-center gap-5">
+              <a
+                href={media.socials.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F7F3EB] transition-colors"
+              >
+                Instagram
+              </a>
+              <a
+                href={media.socials.facebookBrandUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F7F3EB] transition-colors"
+              >
+                Facebook
+              </a>
+              <a
+                href={media.socials.xUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F7F3EB] transition-colors"
+              >
+                X
+              </a>
+              <a
+                href={`https://wa.me/${media.socials.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F7F3EB] transition-colors tabular-nums"
+              >
+                WhatsApp {media.socials.whatsappDisplay}
+              </a>
+              <span>·</span>
               <button
                 type="button"
                 onClick={onOpenAdmin}

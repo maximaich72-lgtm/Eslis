@@ -381,7 +381,7 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                   : 'text-[#141615]/70 hover:text-[#141615]'
               }`}
             >
-              Hero &amp; Room Pictures
+              Hero, Rooms &amp; Socials
             </button>
             <button
               type="button"
@@ -1035,12 +1035,174 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
               </div>
             </div>
 
+            {/* Editable Social Media & Direct WhatsApp Config */}
+            <div className="rounded-[24px] bg-[#EFEAE0] border border-[#141615]/10 p-6 sm:p-8 space-y-5">
+              <div>
+                <h2 className="text-lg font-bold">Social Channels &amp; Direct WhatsApp</h2>
+                <p className="text-xs text-[#141615]/65 mt-0.5">
+                  Updates the navigation drawer, &ldquo;bring it home.&rdquo; closer, and WhatsApp order buttons across the storefront.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold">Instagram Handle &amp; URL</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.instagramHandle}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, instagramHandle: e.target.value },
+                        })
+                      }
+                      placeholder="@eslis_furniture"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="url"
+                      value={mediaDraft.socials.instagramUrl}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, instagramUrl: e.target.value },
+                        })
+                      }
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold">Facebook (Brand) Handle &amp; URL</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.facebookBrandHandle}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, facebookBrandHandle: e.target.value },
+                        })
+                      }
+                      placeholder="@eslis_furniture"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="url"
+                      value={mediaDraft.socials.facebookBrandUrl}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, facebookBrandUrl: e.target.value },
+                        })
+                      }
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold">Facebook (Founder) Handle &amp; URL</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.facebookFounderHandle}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, facebookFounderHandle: e.target.value },
+                        })
+                      }
+                      placeholder="@fredolisndungu"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="url"
+                      value={mediaDraft.socials.facebookFounderUrl}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, facebookFounderUrl: e.target.value },
+                        })
+                      }
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold">X Handle &amp; URL</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.xHandle}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, xHandle: e.target.value },
+                        })
+                      }
+                      placeholder="@eslis_furniture"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="url"
+                      value={mediaDraft.socials.xUrl}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, xUrl: e.target.value },
+                        })
+                      }
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 md:col-span-2">
+                  <label className="block text-xs font-semibold">
+                    WhatsApp Display Number &amp; International Digits (for wa.me link)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.whatsappDisplay}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: { ...mediaDraft.socials, whatsappDisplay: e.target.value },
+                        })
+                      }
+                      placeholder="0706276318"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs tabular-nums"
+                    />
+                    <input
+                      type="text"
+                      value={mediaDraft.socials.whatsappNumber}
+                      onChange={(e) =>
+                        setMediaDraft({
+                          ...mediaDraft,
+                          socials: {
+                            ...mediaDraft.socials,
+                            whatsappNumber: e.target.value.replace(/\D/g, ''),
+                          },
+                        })
+                      }
+                      placeholder="254706276318"
+                      className="rounded-xl bg-[#F7F3EB] border border-[#141615]/15 px-3 py-2 text-xs font-mono-tabular"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="flex justify-end">
               <button
                 type="submit"
                 className="px-6 py-3 rounded-full bg-[#9E3B1C] text-[#F7F3EB] text-sm font-semibold hover:bg-[#B84A27] cursor-pointer"
               >
-                Publish All Media Changes
+                Publish All Media &amp; Social Changes
               </button>
             </div>
           </form>

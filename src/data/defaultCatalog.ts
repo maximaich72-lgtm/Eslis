@@ -100,9 +100,21 @@ export const DEFAULT_SITE_MEDIA: SiteMediaConfig = {
       title: 'Warm Limewash Dining & Reading Corner',
       location: 'Kamakis · Eastern Bypass',
       featuredPiece: 'Savannah Lounge Chair & Fluted Sideboard',
-      imageUrl: '/src/assets/images/room_lounge_lookbook_1795535956998.jpg',
+    imageUrl: '/src/assets/images/room_lounge_lookbook_1795535956998.jpg',
     },
   ],
+  socials: {
+    instagramHandle: '@eslis_furniture',
+    instagramUrl: 'https://www.instagram.com/eslis_furniture/',
+    facebookBrandHandle: '@eslis_furniture',
+    facebookBrandUrl: 'https://www.facebook.com/eslis_furniture/',
+    facebookFounderHandle: '@fredolisndungu',
+    facebookFounderUrl: 'https://www.facebook.com/fredolisndungu/',
+    xHandle: '@eslis_furniture',
+    xUrl: 'https://x.com/eslis_furniture',
+    whatsappDisplay: '0706276318',
+    whatsappNumber: '254706276318',
+  },
 };
 
 export const DEFAULT_SALES: SaleRecord[] = [

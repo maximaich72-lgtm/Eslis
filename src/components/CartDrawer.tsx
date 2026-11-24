@@ -12,6 +12,7 @@ interface CartDrawerProps {
   onUpdateQty: (id: string, delta: number) => void;
   onRemove: (id: string) => void;
   onConfirmOrder: (branch: string) => void;
+  whatsappNumber?: string;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -21,6 +22,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onUpdateQty,
   onRemove,
   onConfirmOrder,
+  whatsappNumber = WHATSAPP_NUMBER,
 }) => {
   const [selectedBranch, setSelectedBranch] = useState(ESLIS_SHOWROOMS[0].name);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
@@ -41,7 +43,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     )
     .join('\n');
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     `Hello Eslis Furniture, I'd like to place an order:\n${whatsappSummary}\n\nTotal: ${formatKes(
       subtotal
     )}\nPreferred Showroom: ${selectedBranch}`

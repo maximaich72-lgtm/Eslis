@@ -64,7 +64,16 @@ export const storageService = {
   },
 
   async getSiteMedia(): Promise<SiteMediaConfig> {
-    return safeRead<SiteMediaConfig>(STORAGE_KEYS.MEDIA, DEFAULT_SITE_MEDIA);
+    const saved = safeRead<Partial<SiteMediaConfig>>(STORAGE_KEYS.MEDIA, DEFAULT_SITE_MEDIA);
+    return {
+      ...DEFAULT_SITE_MEDIA,
+      ...saved,
+      rooms: saved.rooms && saved.rooms.length > 0 ? saved.rooms : DEFAULT_SITE_MEDIA.rooms,
+      socials: {
+        ...DEFAULT_SITE_MEDIA.socials,
+        ...(saved.socials || {}),
+      },
+    };
   },
 
   async saveSiteMedia(config: SiteMediaConfig): Promise<SiteMediaConfig> {

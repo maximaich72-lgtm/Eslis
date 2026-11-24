@@ -185,6 +185,7 @@ export default function App() {
         onNavigate={handleNavigate}
         bagCount={totalBagCount}
         onOpenBag={() => setBagOpen(true)}
+        socials={media.socials}
       />
 
       {route === 'home' ? (
@@ -202,6 +203,7 @@ export default function App() {
             activeId={activeCollectionId}
             onSelectId={setActiveCollectionId}
             onAddToBag={handleAddToBag}
+            whatsappNumber={media.socials.whatsappNumber}
           />
 
           <Suspense fallback={<div className="min-h-[320px] bg-[#EFEAE0]" />}>
@@ -248,6 +250,7 @@ export default function App() {
             onUpdateQty={handleUpdateQty}
             onRemove={handleRemoveFromBag}
             onConfirmOrder={handleConfirmOrder}
+            whatsappNumber={media.socials.whatsappNumber}
           />
         </Suspense>
       )}

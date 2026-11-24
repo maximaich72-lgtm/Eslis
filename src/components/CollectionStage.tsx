@@ -11,6 +11,7 @@ interface CollectionStageProps {
   activeId: string;
   onSelectId: (id: string) => void;
   onAddToBag: (item: FurnitureItem) => void;
+  whatsappNumber?: string;
 }
 
 export const CollectionStage: React.FC<CollectionStageProps> = ({
@@ -18,6 +19,7 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
   activeId,
   onSelectId,
   onAddToBag,
+  whatsappNumber = WHATSAPP_NUMBER,
 }) => {
   const shouldReduceMotion = useReducedMotion();
   const spotlightList = items.slice(0, 4);
@@ -38,7 +40,7 @@ export const CollectionStage: React.FC<CollectionStageProps> = ({
     onSelectId(spotlightList[nextIdx].id);
   };
 
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     `Hello Eslis Furniture, I would like to order the ${activeItem.title} (${formatKes(
       activeItem.priceKes
     )}).`
