@@ -10,7 +10,7 @@ import {
   Unlock,
 } from 'lucide-react';
 import { ESLIS_SHOWROOMS } from '../data/defaultCatalog';
-import { formatKes } from '../services/storageService';
+import { formatKes, storageService } from '../services/storageService';
 import {
   FurnitureCategory,
   FurnitureItem,
@@ -42,16 +42,6 @@ const CATEGORIES: FurnitureCategory[] = [
   'Dining',
 ];
 
-function readFileAsDataUrl(file: File, onLoaded: (url: string) => void) {
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (typeof reader.result === 'string') {
-      onLoaded(reader.result);
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
 export const AdminStudio: React.FC<AdminStudioProps> = ({
   items,
   media,
@@ -66,10 +56,15 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
   const [unlocked, setUnlocked] = useState<boolean>(() => {
     return sessionStorage.getItem('eslis_admin_unlocked') === '1';
   });
+  const [adminPasscode, setAdminPasscode] = useState<string>(() => {
+    return sessionStorage.getItem('eslis_admin_passcode') || DEFAULT_PASSCODE;
+  });
   const [passcodeInput, setPasscodeInput] = useState('');
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState<'catalog' | 'media' | 'sales'>('catalog');
   const [statusNotice, setStatusNotice] = useState('');
+  const [uploadError, setUploadError] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   // Catalog form state
   const [editingItem, setEditingItem] = useState<FurnitureItem | null>(null);
@@ -98,13 +93,42 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
 
   const notify = (msg: string) => {
     setStatusNotice(msg);
-    setTimeout(() => setStatusNotice(''), 3000);
+    setTimeout(() => setStatusNotice(''), 4000);
+  };
+
+  const handleImageUpload = async (
+    file: File,
+    applyUrl: (url: string) => void | Promise<void>,
+    label: string
+  ) => {
+    setUploadError('');
+    setIsUploading(true);
+    try {
+      const result = await storageService.uploadImage(file, adminPasscode);
+      await applyUrl(result.url);
+      if (result.storage === 'r2') {
+        notify(`Uploaded ${label} to Cloudflare R2 (${result.url}).`);
+      } else {
+        notify(
+          `Loaded ${label} preview locally (bind IMAGES_BUCKET R2 in Cloudflare for cross-device storage).`
+        );
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Image upload failed. Please try again.';
+      setUploadError(message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcodeInput.trim() === DEFAULT_PASSCODE) {
+    const entered = passcodeInput.trim();
+    if (entered === DEFAULT_PASSCODE) {
       sessionStorage.setItem('eslis_admin_unlocked', '1');
+      sessionStorage.setItem('eslis_admin_passcode', entered);
+      setAdminPasscode(entered);
       setUnlocked(true);
       setAuthError('');
     } else {
@@ -114,8 +138,10 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
 
   const handleLock = () => {
     sessionStorage.removeItem('eslis_admin_unlocked');
+    sessionStorage.removeItem('eslis_admin_passcode');
     setUnlocked(false);
     setPasscodeInput('');
+    setUploadError('');
   };
 
   // Real-time financial metrics
@@ -348,9 +374,28 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
           </div>
         </div>
 
+        {isUploading && (
+          <div className="mb-6 rounded-2xl bg-[#EFEAE0] border border-[#141615]/15 text-[#141615] px-4 py-3 text-sm font-medium">
+            Uploading image to Cloudflare R2 storage...
+          </div>
+        )}
+
+        {uploadError && (
+          <div className="mb-6 rounded-2xl bg-[#9E3B1C] text-[#F7F3EB] px-4 py-3 text-sm font-medium flex items-center justify-between gap-3">
+            <span>{uploadError}</span>
+            <button
+              type="button"
+              onClick={() => setUploadError('')}
+              className="text-xs underline shrink-0 cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
         {statusNotice && (
           <div className="mb-6 rounded-2xl bg-[#1B3B2B] text-[#F7F3EB] px-4 py-3 text-sm font-medium flex items-center gap-2">
-            <Check className="w-4 h-4 text-[#B84A27]" />
+            <Check className="w-4 h-4 text-[#B84A27] shrink-0" />
             <span>{statusNotice}</span>
           </div>
         )}
@@ -505,14 +550,18 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                       />
                       <label className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#141615] text-[#F7F3EB] text-xs font-semibold cursor-pointer shrink-0">
                         <ImagePlus className="w-4 h-4" />
-                        <span>Upload</span>
+                        <span>{isUploading ? 'Uploading...' : 'Upload R2'}</span>
                         <input
                           type="file"
                           accept="image/*"
+                          disabled={isUploading}
                           className="sr-only"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
-                            if (file) readFileAsDataUrl(file, setNewImageUrl);
+                            e.target.value = '';
+                            if (file) {
+                              void handleImageUpload(file, setNewImageUrl, file.name);
+                            }
                           }}
                         />
                       </label>
@@ -666,18 +715,23 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                       />
                       <label className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#9E3B1C] text-[#F7F3EB] text-xs font-semibold cursor-pointer shrink-0">
                         <ImagePlus className="w-4 h-4" />
-                        <span>Upload</span>
+                        <span>{isUploading ? 'Uploading...' : 'Upload R2'}</span>
                         <input
                           type="file"
                           accept="image/*"
+                          disabled={isUploading}
                           className="sr-only"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
+                            e.target.value = '';
                             if (file) {
-                              readFileAsDataUrl(file, (url) =>
-                                setEditingItem((prev) =>
-                                  prev ? { ...prev, imageUrl: url } : null
-                                )
+                              void handleImageUpload(
+                                file,
+                                (url) =>
+                                  setEditingItem((prev) =>
+                                    prev ? { ...prev, imageUrl: url } : null
+                                  ),
+                                editingItem.title
                               );
                             }
                           }}
@@ -770,14 +824,19 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                         <input
                           type="file"
                           accept="image/*"
+                          disabled={isUploading}
                           className="sr-only"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
+                            e.target.value = '';
                             if (file) {
-                              readFileAsDataUrl(file, async (url) => {
-                                await onSaveItem({ ...item, imageUrl: url });
-                                notify(`Updated picture for "${item.title}".`);
-                              });
+                              void handleImageUpload(
+                                file,
+                                async (url) => {
+                                  await onSaveItem({ ...item, imageUrl: url });
+                                },
+                                item.title
+                              );
                             }
                           }}
                         />
@@ -849,16 +908,21 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                     />
                     <label className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#141615] text-[#F7F3EB] text-xs font-semibold cursor-pointer shrink-0">
                       <ImagePlus className="w-3.5 h-3.5" />
-                      <span>Upload</span>
+                      <span>Upload R2</span>
                       <input
                         type="file"
                         accept="image/*"
+                        disabled={isUploading}
                         className="sr-only"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
+                          e.target.value = '';
                           if (file) {
-                            readFileAsDataUrl(file, (url) =>
-                              setMediaDraft((prev) => ({ ...prev, heroImageUrl: url }))
+                            void handleImageUpload(
+                              file,
+                              (url) =>
+                                setMediaDraft((prev) => ({ ...prev, heroImageUrl: url })),
+                              'Hero Sofa'
                             );
                           }
                         }}
@@ -913,19 +977,24 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                     />
                     <label className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#141615] text-[#F7F3EB] text-xs font-semibold cursor-pointer shrink-0">
                       <ImagePlus className="w-3.5 h-3.5" />
-                      <span>Upload</span>
+                      <span>Upload R2</span>
                       <input
                         type="file"
                         accept="image/*"
+                        disabled={isUploading}
                         className="sr-only"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
+                          e.target.value = '';
                           if (file) {
-                            readFileAsDataUrl(file, (url) =>
-                              setMediaDraft((prev) => ({
-                                ...prev,
-                                craftSpotlightImageUrl: url,
-                              }))
+                            void handleImageUpload(
+                              file,
+                              (url) =>
+                                setMediaDraft((prev) => ({
+                                  ...prev,
+                                  craftSpotlightImageUrl: url,
+                                })),
+                              'Craft Spotlight'
                             );
                           }
                         }}
@@ -1014,17 +1083,22 @@ export const AdminStudio: React.FC<AdminStudioProps> = ({
                         <input
                           type="file"
                           accept="image/*"
+                          disabled={isUploading}
                           className="sr-only"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
+                            e.target.value = '';
                             if (file) {
-                              readFileAsDataUrl(file, (url) => {
-                                setMediaDraft((prev) => {
-                                  const nextRooms = [...prev.rooms];
-                                  nextRooms[idx] = { ...nextRooms[idx], imageUrl: url };
-                                  return { ...prev, rooms: nextRooms };
-                                });
-                              });
+                              void handleImageUpload(
+                                file,
+                                (url) =>
+                                  setMediaDraft((prev) => {
+                                    const nextRooms = [...prev.rooms];
+                                    nextRooms[idx] = { ...nextRooms[idx], imageUrl: url };
+                                    return { ...prev, rooms: nextRooms };
+                                  }),
+                                room.label
+                              );
                             }
                           }}
                         />

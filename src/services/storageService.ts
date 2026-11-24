@@ -29,11 +29,70 @@ function safeWrite<T>(key: string, data: T): void {
   }
 }
 
-/**
- * Storage abstraction structured with async methods so it can be swapped
- * cleanly to Cloudflare D1 endpoints (/api/items, /api/media, /api/sales).
- */
+export interface UploadResult {
+  url: string;
+  storage: 'r2' | 'local-fallback';
+  key?: string;
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error('Failed to read image file.'));
+      }
+    };
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 export const storageService = {
+  async uploadImage(file: File, adminPassword: string): Promise<UploadResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'x-admin-password': adminPassword,
+        },
+        body: formData,
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(errBody.error || 'Admin password rejected by upload endpoint.');
+      }
+
+      if (res.ok) {
+        const data = (await res.json()) as { url?: string; key?: string };
+        if (data.url) {
+          return {
+            url: data.url,
+            storage: 'r2',
+            key: data.key,
+          };
+        }
+      }
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('password')) {
+        throw err;
+      }
+      // Local dev fallback when Cloudflare Pages / R2 binding is not attached
+    }
+
+    const dataUrl = await readFileAsDataUrl(file);
+    return {
+      url: dataUrl,
+      storage: 'local-fallback',
+    };
+  },
+
   async getItems(): Promise<FurnitureItem[]> {
     // Future Cloudflare D1 endpoint: const res = await fetch('/api/items');
     const items = safeRead<FurnitureItem[]>(STORAGE_KEYS.ITEMS, DEFAULT_FURNITURE_ITEMS);

@@ -68,6 +68,22 @@ export const DEFAULT_FURNITURE_ITEMS: FurnitureItem[] = [
     quantityOnHand: 9,
     updatedAt: '2026-11-24T08:00:00.000Z',
   },
+  {
+    id: 'eslis-fluted-coffee-table',
+    slotNumber: '05',
+    title: 'Nairobi Fluted Coffee Table',
+    category: 'Dining',
+    priceKes: 15500,
+    dimensions: '95 × 95 × 40 cm',
+    material: 'Solid fluted walnut drum · Hand-rubbed matte oil',
+    description:
+      'Circular drum coffee table wrapped in crisp vertical timber fluting with a recessed travertine-toned center inlay.',
+    imageUrl: '/src/assets/images/room_living_lookbook_1795536007902.jpg',
+    inStock: true,
+    featured: false,
+    quantityOnHand: 8,
+    updatedAt: '2026-11-24T08:00:00.000Z',
+  },
 ];
 
 export const DEFAULT_SITE_MEDIA: SiteMediaConfig = {
